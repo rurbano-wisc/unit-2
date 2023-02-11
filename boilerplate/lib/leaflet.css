@@ -1,5 +1,10 @@
 /* required styles */
 
+/* added */
+#map { height: 180px; }
+
+
+/* original */
 .leaflet-pane,
 .leaflet-tile,
 .leaflet-marker-icon,
