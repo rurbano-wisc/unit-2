@@ -1,6 +1,18 @@
 //geojsonTutorial.js
+//declare where map is
+var map = L.map('map').setView([39.75621, -105], 13);
+
+//openstreetmap in this case tileset added to map for reference
+var tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png?pk.eyJ1IjoicnVyYmFubyIsImEiOiJjbGFoanRxYWkwY3c5M3dta2RhdzNlYXppIn0.HebbeRpuABArQDdvwTJhEQ', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+
+tileLayer.addTo(map);
+        //credit to streetmap
 
 //simple geojsonFeature
+//this is essentially equivalent to one row, marks coors field
 var geojsonFeature = {
     "type": "Feature",
     "properties": {
@@ -14,7 +26,7 @@ var geojsonFeature = {
     }
 };
 
-// objects added to map through geojson layer
+// objects added to map through geojson layer; created and added to map
 L.geoJSON(geojsonFeature).addTo(map);
 
 //geojson obj can be passed as an array of geojson objects
@@ -33,6 +45,7 @@ myLayer.addData(geojsonFeature);
 
 //style options
 // simple object that styles all paths (polylines and polygons) the same way
+//this creates line features at an angle specifically
 var myLines = [{
     "type": "LineString",
     "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
@@ -41,17 +54,20 @@ var myLines = [{
     "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
 }];
 
+//determines line style characteristics, in this case orange lines!
 var myStyle = {
     "color": "#ff7800",
     "weight": 5,
     "opacity": 0.65
 };
 
+//adds the lines
 L.geoJSON(myLines, {
     style: myStyle
 }).addTo(map);
 
-//function that styles individual features based on their properties
+//function that styles individual features based on their properties, in this case a rectangle of coordinates
+//makes ND red based on envelope
 var states = [{
     "type": "Feature",
     "properties": {"party": "Republican"},
@@ -66,6 +82,7 @@ var states = [{
         ]]
     }
 }, {
+    //makes Colorado blue
     "type": "Feature",
     "properties": {"party": "Democrat"},
     "geometry": {
@@ -80,6 +97,7 @@ var states = [{
     }
 }];
 
+//colors the features based on party value with a corresponding color
 L.geoJSON(states, {
     style: function(feature) {
         switch (feature.properties.party) {
@@ -89,8 +107,12 @@ L.geoJSON(states, {
     }
 }).addTo(map);
 
+///below not working
+
 //default simple markers are drawn for GeoJSON Points
-//altered this by passing pointToLayer function in a GeoJSON options, in this case for circle markers
+//altered this by passing pointToLayer function in a GeoJSON options, in this case for circle markers that are orange
+
+//rename to orangecircleOptions ??
 var geojsonMarkerOptions = {
     radius: 8,
     fillColor: "#ff7800",
@@ -106,6 +128,8 @@ L.geoJSON(someGeojsonFeature, {
     }
 }).addTo(map);
 
+
+
 //called on each feature before adding it to a GeoJSON layer; commonly used to attach a popup to features when clicked
 function onEachFeature(feature, layer) {
     // does this feature have a property named popupContent?
@@ -113,7 +137,7 @@ function onEachFeature(feature, layer) {
         layer.bindPopup(feature.properties.popupContent);
     }
 }
-
+//describe features with a set of properties 
 var geojsonFeature = {
     "type": "Feature",
     "properties": {
@@ -126,7 +150,7 @@ var geojsonFeature = {
         "coordinates": [-104.99404, 39.75621]
     }
 };
-
+//using onEachFeature which gets caled on each feature before adding to layer
 L.geoJSON(geojsonFeature, {
     onEachFeature: onEachFeature
 }).addTo(map);

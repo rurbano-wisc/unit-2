@@ -1,18 +1,13 @@
 //quickstartTutorial.js
 //initialize the map using OpenStreetMap tiles and set its view coordinates & a zoom level
-var map = L.map('map', {
-    center: [51.505, -0.09], 
-    zoom: 13
-});
+var map = L.map('map').setView([51.505, -0.09], 13);
 
-//add tile layer to map                                    
-//openstreetmap in this case
-var tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png?pk.eyJ1IjoicnVyYmFubyIsImEiOiJjbGFoanRxYWkwY3c5M3dta2RhdzNlYXppIn0.HebbeRpuABArQDdvwTJhEQ', {
+//add tile layer to map                                    //added ? and access token
+//<<is this beginning part needed?
+var tileLayer L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png?pk.eyJ1IjoicnVyYmFubyIsImEiOiJjbGFoanRxYWkwY3c5M3dta2RhdzNlYXppIn0.HebbeRpuABArQDdvwTJhEQ', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-});
-
-tileLayer.addTo(map);
+}).addTo(map);
         //credit to streetmap
 
 //used to add markers
