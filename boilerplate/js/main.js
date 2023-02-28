@@ -1,14 +1,12 @@
-//geojsonTutorial.js
-
-//Example 2.3: The complete adaptedTutorial.js script to create a Leaflet map with the MegaCities.geojson data
 /* Map of GeoJSON data from MegaCities.geojson */
 //declare map var in global scope
 var map;
+var minValue;
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
     map = L.map('map', {
-        center: [46, 77],
+        center: [38, -98],
         zoom: 4
     });
 
@@ -21,6 +19,7 @@ function createMap(){
     //call getData function
     getData();
 };
+
 //once grab data apply these functions
 function onEachFeature(feature, layer) {
     //no property named popupContent; instead, create html string with all properties
@@ -50,7 +49,7 @@ function pointToLayer(feature, latlng) {
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
-    fetch("data/MeteoriteLandings_EurAsia.geojson")
+    fetch("data/active_OilStates.geojson")
         .then(function(response){
             return response.json();
         })

@@ -122,9 +122,8 @@ function createSequenceControls(attributes){
 
     document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
     document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
-
+    //imgs for buttons
     document.querySelector('#reverse').insertAdjacentHTML('beforeend',"<img src='img/reverse.png'>");
-    //is it possible to horizontally flip the reverse as forward?
     document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/forward.png'>");
 
     //Step 5: click listener for buttons
@@ -199,7 +198,6 @@ function updatePropSymbols(attribute){
     map.eachLayer(function(layer){
         if (layer.feature && layer.feature.properties[attribute]){
             //update the layer style and popup
-            //how do I know if this works?
             //access feature properties
             var props = layer.feature.properties;
 

@@ -1,6 +1,6 @@
 /*Add CSS styles here*/
 #map {    
-    height: 400px;    
+    height: 500px;    
     width: 80%;
     display: inline-block;
     }
@@ -30,6 +30,6 @@
     float: right;  
 }  
 
-#reverse {  
+#reverse {   
     float: left;  
 }

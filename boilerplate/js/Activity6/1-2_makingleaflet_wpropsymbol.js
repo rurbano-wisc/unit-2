@@ -48,21 +48,7 @@ function calcPropRadius(attValue) {
 
     return radius;
 };
-//once grab data apply these functions
-// function onEachFeature(feature, layer) {
-//     //no property named popupContent; instead, create html string with all properties
-//     var popupContent = "";
-//     //if it has properties otherwise not considered
-//     if (feature.properties) {
-//         //loop to add feature property names and values to html string
-//         for (var property in feature.properties){
-//                                                         //value of property
-//             popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
-//         //if/then properties can be applied to grab certain fields
-//         }
-//         layer.bindPopup(popupContent);
-//         }
-// };
+
 function createPropSymbols(data){
     //Step 4. Determine the attribute for scaling the proportional symbols
     var attribute = "Pop_2015";
