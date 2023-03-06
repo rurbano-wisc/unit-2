@@ -27,7 +27,7 @@ function calculateMinValue(data){
     for(var STate of data.features){
         //loop through each year
         for(var year = 1980; year <= 2015; year+=5){
-              //get population for current year
+              //get NumWells_ for current year
               var value = STate.properties["NumWells_"+ String(year)];
               //add value to array
               allValues.push(value);
@@ -70,6 +70,16 @@ function onEachFeature(feature, layer) {
         }
 };
 
+//refactoring duplicate code
+function createPopupContent(properties, attribute){
+    //add STate to popup content string
+    var popupContent = "<p><b>State:</b> " + feature.properties.STate + "</p>";
+    //add formatted attribute to popup content string
+    var year = attribute.split("_")[1];
+    popupContent += "<p><b>Number of wells in " + year + ":</b>" + feature.properties[attribute] + " </p>";
+    return popupContent;
+};
+
    //POINT TO LAYER
 function pointToLayer(feature, latlng, attributes){
     //Step 4. Determine the attribute for scaling the proportional symbols
@@ -91,15 +101,17 @@ function pointToLayer(feature, latlng, attributes){
     //create circle marker layer
     var layer = L.circleMarker(latlng, options);
 
-    //build popup content string
-    var popupContent = "<p><b>State:</b> " + feature.properties.STate + "</p>"; 
+    //popup
+    var popupContent = createPopupContent(feature.properties, attribute);
+                    // var popupContent = "<p><b>State:</b> " + feature.properties.STate + "</p>"; 
 
-    //add formatted attribute to popup content string
-    var year = attribute.split("_")[1];
-    popupContent += "<p><b>Number of wells in " + year + ":</b>" + feature.properties[attribute] + " </p>";
+                    // //add formatted attribute to popup content string
+                    // var year = attribute.split("_")[1];
+                    // popupContent += "<p><b>Number of wells in " + year + ":</b>" + feature.properties[attribute] + " </p>";
 
     //bind the popup to the circle marker
-    layer.bindPopup(popupContent);
+                    // layer.bindPopup(popupContent);
+    layer.bindPopup(popupContent, { offset: new L.Point(0,-options.radius)  });
      //return the circle marker to the L.geoJson pointToLayer option
      return layer;
     };
@@ -213,12 +225,14 @@ function updatePropSymbols(attribute){
             var radius = calcPropRadius(props[attribute]);
             layer.setRadius(radius);
 
-            //add city to popup content string
-            var popupContent = "<p><b>State:</b> " + props.STate + "</p>";
+            //add STate to popup content string
+            var popupContent = createPopupContent(props,attribute);
 
-            //add formatted attribute to panel content string
-            var year = attribute.split("_")[1];
-            popupContent += "<p><b>Number of wells in " + year + ":</b> " + props[attribute] + "</p>";
+                            // var popupContent = "<p><b>State:</b> " + props.STate + "</p>";
+
+                            // //add formatted attribute to panel content string
+                            // var year = attribute.split("_")[1];
+                            // popupContent += "<p><b>Number of wells in " + year + ":</b> " + props[attribute] + "</p>";
 
             //update popup content            
             popup = layer.getPopup();            
