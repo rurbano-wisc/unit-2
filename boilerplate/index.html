@@ -3,16 +3,29 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <!-- title stuff -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>     
+        <title>Top producing Oil States 1980-2015</title>     
         <!--leaflet css file-->
         <link rel="stylesheet" href="lib/leaflet.css">
+
+        <!-- also for fifth operator -->
+        <!-- <script src = "js/leaflet-search.src.js" ></script> -->
+        <link rel="stylesheet" href="css/leaflet-search.src.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+   integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+   crossorigin=""/>
+        <!-- <script src = "lib\leaflet.js.maps.js" ></script> -->
+
+        <!-- not for fifth operator -->
         <link rel="stylesheet" href="css/style.css">
+    
+        <!-- fifth operator leaflet search -->
+        <script src = "js/otherLayers.js" ></script>
+    
         <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.js"></script> -->
     </head>
-
+<!--  -->
     <body>
         <h1>Expansion in Oil Activity <small> <i>1980-2015 shown below</i> for select states.</small></h1> 
             <h2>
@@ -20,19 +33,38 @@
                     <p><b>Oil well </b><small>- a hole drilled in the earth for the purpose of finding or producing crude oil or natural gas or future gas exploration.</small></p>
                 </blockquote>
             </h2>
-            
+        <!-- json data for fifth operator -->
+          
+        <script>
+        // var L = window.L;
+        // var map = L.map('map').setView([38,-100],5);
+        // L.L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',{
+        //     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' 
+        // }).addTo(map);
+        // const searchLayer = L.geoJson(otherLayers,{
+        //     onEachFeature: function(feature, layer){
+        //         layer.bindPopup(feature.properties.State);
+        //     }
+        // }).addTo(map);
+        
+        // // Control Search
+        // const searchControl = new L.Control.Search({
+        //     layer: searchLayer,
+        //     propertyName: 'STate'
+        // });
+        // map.addControl(searchControl);
+        </script>
+
         <!--put your initial page content here-->
         <div id="map"></div>
-        
         <div id="slidecontainer"></div>
         <div id="forward"></div>
         <div id="reverse"></div>
-
         <div id="legend"></div>
-        <div id="attributelegend"></div>
-        <!-- <svg id="attribute-legend" width="180px" height="180px">
-            <circle fill="yellow" fill-opacity="0.8" stroke="#000000" stroke-miterlimit="10" cx="90" cy="90.001" r="89.5"/>
-        </svg>  -->
+        <!-- for fifth operator -->
+        <div id="searchbar"></div>
+       <!--  -->
+
         <footer class="footer"></footer>
         <figure>
             <figcaption>Data Source: <small>Utilizing an Oil and Gas Well </small><cite><a href="https://www.arcgis.com/apps/mapviewer/index.html?url=https://services1.arcgis.com/Hp6G80Pky0om7QvQ/ArcGIS/rest/services/Oil_and_Natural_Gas_Wells/FeatureServer&source=sd"><small>feature layer</small></a></cite><small> created by a handful of National Laboratories & Homeland Security made publicly available for exploring Oil & Gas activity in the United States and portions of Canada.</small></figcaption>
@@ -42,11 +74,8 @@
 <!---->
         <!--Leaflet JavaScript-->
         <script type="text/javascript" src="lib/leaflet-src.js"></script>
-
-
         <!--link to active_OilStates.js -->
-        <script type="text/javascript" src="js/active_OilStates lab1 lesson2.js"></script>
-    
+        <script type="text/javascript" src="js/active_OilStates lab1 lesson2 copy.js"></script>
         <!--all above this one-->
         <!-- <script type="text/javascript" src="js/main.js"></script> -->
         

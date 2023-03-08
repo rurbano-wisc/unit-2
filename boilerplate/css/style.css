@@ -16,11 +16,11 @@ h1, h2{
     color: #222;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
-    line-height: 1.;
+    line-height: 1;
 }
 #map {    
-    height: 500px;    
-    width: 95%;
+    height: 550px;    
+    width: 90%;
     display: inline-block;
     }
 /* do I need to remove this block below */
@@ -57,7 +57,53 @@ h1, h2{
 #reverse {   
     float: left;   
 }
+#legend
+/* not sure why all three of these need to be present for the box to display for the legend :/ */
+.legend-control-container {
+    margin: 10px;
+    padding: 10px;
+    height: 450px;
+    font-weight: bold;
+    width: 220px;
+    background-color: rgba(255,255,255,0.8);
+    text-align: center;
+    border: solid gray 1px;
+}
+/* this apparently needs to be present to work with the box display */
+.legend-control-container {
+    width: 220px;
+    background-color: rgba(255,255,255,0.8);
+    text-align: center;
+    border: solid gray 1px;
+}
+.legend-circle{
+   background-color:"#F47821";
+   border: solid gray 1px; 
 
-/* #attributelegend {  
-    float: bottomright;  
-}   */
+
+}
+/* #searchbar{
+    margin-left: 15%;
+    padding:15px;
+    border-radius: 10px;
+  }
+
+  input[type=text] {
+     width: 30%;
+     -webkit-transition: width 0.15s ease-in-out;
+     transition: width 0.15s ease-in-out;
+  } */
+
+  /* When the input field gets focus,
+       change its width to 100% */
+  /* input[type=text]:focus {
+    width: 70%;
+  }
+  #list{
+    font-size:  1.5em;
+    margin-left: 90px;
+   }
+ 
+.STates{
+   display: list-item;    
+  }  */
