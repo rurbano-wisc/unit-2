@@ -19,8 +19,8 @@
         <!-- not for fifth operator -->
         <link rel="stylesheet" href="css/style.css">
     
-        <!-- fifth operator leaflet search -->
-        <script src = "js/otherLayers.js" ></script>
+        <!-- fifth operator leaflet search; was testing with refineries layer, would have liked to add the pipelines -->
+        <!-- <script src = "js/otherLayers.js" ></script> -->
     
         <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.js"></script> -->
@@ -33,20 +33,20 @@
                     <p><b>Oil well </b><small>- a hole drilled in the earth for the purpose of finding or producing crude oil or natural gas or future gas exploration.</small></p>
                 </blockquote>
             </h2>
-        <!-- json data for fifth operator -->
-          
+        <!-- json data for fifth operator, abandoned I would have liked to display the records that were only for the selected state. Not being able to get the search bar to even render I lost a lot of time -->
         <script>
         // var L = window.L;
         // var map = L.map('map').setView([38,-100],5);
         // L.L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',{
         //     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' 
         // }).addTo(map);
+
         // const searchLayer = L.geoJson(otherLayers,{
         //     onEachFeature: function(feature, layer){
         //         layer.bindPopup(feature.properties.State);
         //     }
         // }).addTo(map);
-        
+
         // // Control Search
         // const searchControl = new L.Control.Search({
         //     layer: searchLayer,
@@ -64,7 +64,6 @@
         <!-- for fifth operator -->
         <div id="searchbar"></div>
        <!--  -->
-
         <footer class="footer"></footer>
         <figure>
             <figcaption>Data Source: <small>Utilizing an Oil and Gas Well </small><cite><a href="https://www.arcgis.com/apps/mapviewer/index.html?url=https://services1.arcgis.com/Hp6G80Pky0om7QvQ/ArcGIS/rest/services/Oil_and_Natural_Gas_Wells/FeatureServer&source=sd"><small>feature layer</small></a></cite><small> created by a handful of National Laboratories & Homeland Security made publicly available for exploring Oil & Gas activity in the United States and portions of Canada.</small></figcaption>
@@ -74,10 +73,16 @@
 <!---->
         <!--Leaflet JavaScript-->
         <script type="text/javascript" src="lib/leaflet-src.js"></script>
-        <!--link to active_OilStates.js -->
-        <script type="text/javascript" src="js/active_OilStates lab1 lesson2 copy.js"></script>
-        <!--all above this one-->
-        <!-- <script type="text/javascript" src="js/main.js"></script> -->
-        
+
+        <!-- LAB 1 -->
+        <!-- please look at both -->
+
+        <!--link to script with condensed script; working PROPORTIONAL SYMBOLS, slider in map -->
+        <!-- DISPLAYING JS WITH WORKING POINT SYMBOLS even though I know the assignment is looking for the main.js that has all the code of this script
+        but no working legend :( -->
+        <script type="text/javascript" src="js/active_OilStates lab1 lesson2 copy works.js"></script>
+
+        <!--link to script with working slider in map, attribute legend displays with min mean and max, but proportional symbols do not display.js -->
+        <!-- <script type="text/javascript" src="js/main.js"></script>       -->
     </body>
 </html>

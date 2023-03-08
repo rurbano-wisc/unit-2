@@ -218,8 +218,6 @@ function updatePropSymbols(attribute){
         };
     });
 };
-
-
 //function to retrieve the data and place it on the map
 function getData(map){
     //load the data
@@ -230,13 +228,11 @@ function getData(map){
         .then(function(json){
             //create an attributes array
             var attributes = processData(json);
-            // minValue = calculateMinValue(json); --renamed so replace with below??
+            // minValue = calculateMinValue(json) renamed and replaced
             calcStats(json);
-            createLegend(attributes[0]); 
-            //is it this?
-            // minValue = calcStats(response); 
             createPropSymbols(json, attributes);
             createSequenceControls(attributes);
+            createLegend(attributes[0]); 
         })
 };
 
@@ -257,12 +253,16 @@ function createLegend(attributes){
         onAdd: function () {
             // create the control container with a particular class name
             var container = L.DomUtil.create('div', 'legend-control-container');
+
             var year = attributes.split("_")[1];
+
             container.innerHTML = '<p class="temporalLegend">Number of oil wells in <span class="year">1980</span></p>';
+            
             //Step 1: start attribute legend svg string
-            var svg = '<svg id="attribute-legend" width="200px" height="150px">';
-            // //add attribute legend svg to container
-            // container.innerHTML += svg;
+            var svg = '<svg id="attribute-legend" width="200px" height="100px">';
+            //add attribute legend svg to container--needed anymore??
+            container.innerHTML += svg;
+            
             //array of circle names to base loop on
             var circles = ["max", "mean", "min"];
 
@@ -271,19 +271,23 @@ function createLegend(attributes){
                 //Step 3: assign the r and cy attributes  
                 var radius = calcPropRadius(dataStats[circles[i]]);  
                 var cy = 130 - radius; 
+                
                 //circle string
                 svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + '"cy="' + cy + '" fill="yellow" fill-opacity="0.8" stroke="#000000" cx="65"/>';
                 //evenly space out labels            
-                var textY = i * 60 + 20;
+                var textY = i * 20 + 20;
                  //text string            
             svg += '<text id="' + circles[i] + '-text" x="115" y="' + textY + '">' + Math.round(dataStats[circles[i]]*100)/100 + " wells" + '</text>'; 
             };
             
             //close svg string
             svg += "</svg>";
+
             //add attribute legend svg to container
             container.insertAdjacentHTML('beforeend',svg);
+
             return container;
+            
             }
         });
         // controlLayers.addTo(map);

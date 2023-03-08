@@ -2,7 +2,7 @@
 //declare map variable globally so all functions have access; which apparently the min value and control layers this needs to be done as well
 var map;
 var minValue;
-var controlLayers = L.control.layers();
+// var controlLayers = L.control.layers();
 //pretty black basemap with green overtones of landcover
 var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
 	maxZoom: 20,
@@ -26,6 +26,7 @@ function createMap(){
 };
 
 //array that is very important to like everything and needs to be piped in lots of places so don't forget >>>>>>>   NumWells_    <<<<<<<<<<<
+//function calcStats(data){
 function calculateMinValue(data){
     //create empty array to store all data values
     var allValues = [];
@@ -39,6 +40,15 @@ function calculateMinValue(data){
               allValues.push(value);
         }
     }
+    // //get min, max, mean stats for our array
+    // dataStats.min = Math.min(...allValues);
+    // dataStats.max = Math.max(...allValues);
+    // //calculate meanValue
+    // var sum = allValues.reduce(function(a, b){return a+b;});
+    // dataStats.mean = sum/ allValues.length;
+    // //get minimum value of array--no longer need filter cleaned the data up :( do I need this though?
+    // var minValue = Math.min(...allValues)
+    // return minValue
     //filters out my values that are causing issues
     var greaterThan1_allValues = allValues.filter(function(value){
         return value > 1;
@@ -57,7 +67,7 @@ function calcPropRadius(attValue) {
     var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
     return radius;
 };
-//once grab data apply these functions
+//once grab data apply these functions--IS THIS DUPLICATE, can comment out and doesn't effect
 function onEachFeature(feature, layer) {
     //no property named popupContent; instead, create html string with all properties
     var popupContent = "";
@@ -197,6 +207,7 @@ function getData(map){
         .then(function(json){
             //create an attributes array
             var attributes = processData(json);
+            // calcStats(json);
             minValue = calculateMinValue(json);
             createPropSymbols(json, attributes);
             createSequenceControls(attributes);
@@ -238,14 +249,20 @@ function createLegend(attributes){
             container.innerHTML = '<p class="temporalLegend">Number of oil wells in <span class="year">1980</span></p>';
             //Step 1: start attribute legend svg string
             var svg = '<svg id="attribute-legend" width="130px" height="130px">';
+            container.innerHTML += svg;
             //array of circle names to base loop on
             var circles = ["max", "mean", "min"];
 
             //Step 2: loop to add each circle and text to svg string
             for (var i=0; i<circles.length; i++){
+                var radius = calcPropRadius(dataStats[circles[i]]);  
+                var cy = 130 - radius; 
                 //circle string
-                svg += '<circle class="legend-circle" id="' + circles[i] + 
-                '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="65"/>';
+                svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + '"cy="' + cy + '" fill="yellow" fill-opacity="0.8" stroke="#000000" cx="65"/>';
+                //evenly space out labels            
+                var textY = i * 20 + 20;
+                 //text string            
+            svg += '<text id="' + circles[i] + '-text" x="115" y="' + textY + '">' + Math.round(dataStats[circles[i]]*100)/100 + " wells" + '</text>'; 
             };
             //close svg string
             svg += "</svg>";
