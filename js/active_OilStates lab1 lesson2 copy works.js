@@ -2,7 +2,6 @@
 //declare map variable globally so all functions have access; which apparently the min value and control layers this needs to be done as well
 var map;
 var minValue;
-var dataStats = {};
 // var controlLayers = L.control.layers();
 //pretty black basemap with green overtones of landcover
 var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
@@ -27,7 +26,8 @@ function createMap(){
 };
 
 //array that is very important to like everything and needs to be piped in lots of places so don't forget >>>>>>>   NumWells_    <<<<<<<<<<<
-function calcStats(data){
+//function calcStats(data){
+function calculateMinValue(data){
     //create empty array to store all data values
     var allValues = [];
     //loop through each city
@@ -40,16 +40,25 @@ function calcStats(data){
               allValues.push(value);
         }
     }
-    //get min, max, mean stats for our array
-    dataStats.min = Math.min(...allValues);
-    dataStats.max = Math.max(...allValues);
-    //calculate meanValue
-    var sum = allValues.reduce(function(a, b){return a+b;});
-    dataStats.mean = sum/ allValues.length;
-    //get minimum value of array--no longer need filter cleaned the data up :( do I need this though?
-    var minValue = Math.min(...allValues)
-    return minValue
-} //need semicolon??
+    // //get min, max, mean stats for our array
+    // dataStats.min = Math.min(...allValues);
+    // dataStats.max = Math.max(...allValues);
+    // //calculate meanValue
+    // var sum = allValues.reduce(function(a, b){return a+b;});
+    // dataStats.mean = sum/ allValues.length;
+    // //get minimum value of array--no longer need filter cleaned the data up :( do I need this though?
+    // var minValue = Math.min(...allValues)
+    // return minValue
+    //filters out my values that are causing issues
+    var greaterThan1_allValues = allValues.filter(function(value){
+        return value > 1;
+    });
+    //tested the greaterThan1_allValues; please don't ding me for leaving these notes as they help me remember why I have the order of stuff
+    // console.log(greaterThan1_allValues)
+    //get minimum value of our array; god I have to build out the attribute stuff off this I believe
+    var minValue = Math.min(...greaterThan1_allValues)
+    return minValue;
+}
 //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //constant factor adjusts symbol sizes evenly
@@ -58,7 +67,31 @@ function calcPropRadius(attValue) {
     var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
     return radius;
 };
-//POINT TO LAYER
+//once grab data apply these functions--IS THIS DUPLICATE, can comment out and doesn't effect
+function onEachFeature(feature, layer) {
+    //no property named popupContent; instead, create html string with all properties
+    var popupContent = "";
+    //if it has properties otherwise not considered
+    if (feature.properties) {
+        //loop to add feature property names and values to html string
+        for (var property in feature.properties){
+                                                        //value of property
+            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
+        //if/then properties can be applied to grab certain fields
+        }
+        layer.bindPopup(popupContent);
+        }
+};
+//PopupContent Constructor
+function PopupContent(properties, attribute){
+    this.properties = properties;
+    this.attribute = attribute;
+    this.year = attribute.split("_")[1];
+    //this is my array value right? I think this is where it's having issues. 
+    this.NumWells_ = this.properties[attribute];
+    this.formatted = "<p><b>State:</b> " + this.properties.STate + "</p><p><b>Number of Oil Wells " + this.year + ":</b> " + this.NumWells_ + "</p>";
+};
+   //POINT TO LAYER
 function pointToLayer(feature, latlng, attributes){
     //Step 4. Determine the attribute for scaling the proportional symbols
     var attribute = attributes[0];
@@ -84,7 +117,7 @@ function pointToLayer(feature, latlng, attributes){
     });
      //return the circle marker to the L.geoJson pointToLayer option
      return layer;
-};   
+    };   
 //Add circle markers for point features to the map
 //Example 2.1 line 34...Add circle markers for point features to the map
 function createPropSymbols(data, attributes){
@@ -94,23 +127,6 @@ function createPropSymbols(data, attributes){
             return pointToLayer(feature, latlng, attributes);
         }
     }).addTo(map);
-};
-//calculate the radius of each proportional symbol
-function calcPropRadius(attValue) {
-    //constant factor adjusts symbol sizes evenly
-    var minRadius = .40;
-    //Flannery Apperance Compensation formula :| meh
-    var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
-    return radius;
-};
-//PopupContent Constructor
-function PopupContent(properties, attribute){
-    this.properties = properties;
-    this.attribute = attribute;
-    this.year = attribute.split("_")[1];
-    //this is my array value right? I think this is where it's having issues. 
-    this.NumWells_ = this.properties[attribute];
-    this.formatted = "<p><b>State:</b> " + this.properties.STate + "</p><p><b>Number of Oil Wells " + this.year + ":</b> " + this.NumWells_ + "</p>";
 };
 //Create new sequence controls
 function createSequenceControls(attributes){
@@ -164,22 +180,6 @@ function createSequenceControls(attributes){
         updatePropSymbols(attributes[index]);
     });
 };
-//once grab data apply these functions; IS THIS DUPLICATE, can comment out and doesn't effect
-function onEachFeature(feature, layer) {
-    //no property named popupContent; instead, create html string with all properties
-    var popupContent = "";
-    //if it has properties otherwise not considered
-    if (feature.properties) {
-        //loop to add feature property names and values to html string
-        for (var property in feature.properties){
-                                                        //value of property
-            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
-        //if/then properties can be applied to grab certain fields
-        }
-        layer.bindPopup(popupContent);
-        }
-};
-
 //build an attributes array from the data known as processData
 function processData(data){
     //empty array to hold attributes
@@ -188,8 +188,8 @@ function processData(data){
     var properties = data.features[0].properties;
     //push each attribute name into attributes array
     for (var attribute in properties){
-        //only take attributes with count values; do I need an underscore my index is NumWells_ just NumWells worked before
-        if (attribute.indexOf("NumWells_") > -1){
+        //only take attributes with population values
+        if (attribute.indexOf("NumWells") > -1){
             attributes.push(attribute);
         };
     };
@@ -197,11 +197,29 @@ function processData(data){
     // console.log(attributes);
     return attributes;
 };
+//function to retrieve the data and place it on the map
+function getData(map){
+    //load the data
+    fetch("data/active_OilWells_2.geojson")
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){
+            //create an attributes array
+            var attributes = processData(json);
+            // calcStats(json);
+            minValue = calculateMinValue(json);
+            createPropSymbols(json, attributes);
+            createSequenceControls(attributes);
+        })
+};
+// also does not work for adding a layer
+// var geojson = new L.GeoJSON.AJAX("data\petroleumRefineries.geojson",{style:StratStyle});
+// geojson.on('data:loaded', function(){
+// geojson.addTo(mymap);
+// });
 //Resize proportional symbols according to new attribute values
 function updatePropSymbols(attribute){
-    var year = attribute.split("_")[1];
-        //update temporal legend
-        document.querySelector("span.year").innerHTML = year;
     map.eachLayer(function(layer){
         if (layer.feature && layer.feature.properties[attribute]){
             //update the layer style and popup
@@ -214,35 +232,10 @@ function updatePropSymbols(attribute){
             //update popup content            
             popup = layer.getPopup();            
             popup.setContent(popupContent.formatted).update();
-            //should I have added more here to get the popups to work with the required attribute legend     
+            
         };
     });
 };
-//function to retrieve the data and place it on the map
-function getData(map){
-    //load the data
-    fetch("data/active_OilWells_2.geojson")
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(json){
-            //create an attributes array
-            var attributes = processData(json);
-            calcStats(json);
-            createPropSymbols(json, attributes);
-            createSequenceControls(attributes);
-            createLegend(attributes[0]); 
-        })
-};
-
-
-// also does not work for adding a layer
-// var geojson = new L.GeoJSON.AJAX("data\petroleumRefineries.geojson",{style:StratStyle});
-// geojson.on('data:loaded', function(){
-// geojson.addTo(mymap);
-// });
-
-
 //create legend goes here?
 function createLegend(attributes){
     var LegendControl = L.Control.extend({
@@ -252,25 +245,18 @@ function createLegend(attributes){
         onAdd: function () {
             // create the control container with a particular class name
             var container = L.DomUtil.create('div', 'legend-control-container');
-
             var year = attributes.split("_")[1];
-
             container.innerHTML = '<p class="temporalLegend">Number of oil wells in <span class="year">1980</span></p>';
-            
             //Step 1: start attribute legend svg string
-            var svg = '<svg id="attribute-legend" width="200px" height="100px">';
-            //add attribute legend svg to container--needed anymore??
+            var svg = '<svg id="attribute-legend" width="130px" height="130px">';
             container.innerHTML += svg;
-            
             //array of circle names to base loop on
             var circles = ["max", "mean", "min"];
 
             //Step 2: loop to add each circle and text to svg string
             for (var i=0; i<circles.length; i++){
-                //Step 3: assign the r and cy attributes  
                 var radius = calcPropRadius(dataStats[circles[i]]);  
                 var cy = 130 - radius; 
-                
                 //circle string
                 svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + '"cy="' + cy + '" fill="yellow" fill-opacity="0.8" stroke="#000000" cx="65"/>';
                 //evenly space out labels            
@@ -278,21 +264,18 @@ function createLegend(attributes){
                  //text string            
             svg += '<text id="' + circles[i] + '-text" x="115" y="' + textY + '">' + Math.round(dataStats[circles[i]]*100)/100 + " wells" + '</text>'; 
             };
-            
             //close svg string
             svg += "</svg>";
-
             //add attribute legend svg to container
             container.insertAdjacentHTML('beforeend',svg);
-
-            return container;
-            
+                return container;
             }
         });
-        // controlLayers.addTo(map);
-        map.addControl(new LegendControl());
+    // controlLayers.addTo(map);
+    map.addControl(new LegendControl());
+
 };
-document.addEventListener('DOMContentLoaded',createMap);
+document.addEventListener('DOMContentLoaded',createMap)
 
 // <!-- svg thing -->
 // <!-- <svg id="Layer_1" width="180px" height="180px">
