@@ -4,30 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Top producing Oil States 1980-2015</title>     
-        <!--leaflet css file-->
-        <link rel="stylesheet" href="lib/leaflet.css">
-
-        <!-- <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
-        <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' /> -->
-
-        <!-- also for fifth operator -->
-        <!-- <script src = "js/leaflet-search.src.js" ></script> -->
-        <link rel="stylesheet" href="css/leaflet-search.src.css">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
-   integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
-   crossorigin=""/>
-        <!-- <script src = "lib\leaflet.js.maps.js" ></script> -->
-
-        <!-- not for fifth operator -->
-        <link rel="stylesheet" href="css/style.css">
-    
-        <!-- fifth operator leaflet search; was testing with refineries layer, would have liked to add the pipelines -->
-        <!-- <script src = "js/otherLayers.js" ></script> -->
-    
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.js"></script> -->
-    </head>
+        <title>D3</title>     
+   </head>
 <!--  -->
     <body>
         <h1>Expansion in Oil Activity <small> <i>1980-2015 shown below</i> for select states.</small></h1> 
@@ -36,36 +14,14 @@
                     <p><b>Oil well </b><small>- a hole drilled in the earth for the purpose of finding or producing crude oil or natural gas or future gas exploration.</small></p>
                 </blockquote>
             </h2>
+        <link rel="stylesheet" href="css/style.css">
         <!-- json data for fifth operator, abandoned I would have liked to display the records that were only for the selected state. Not being able to get the search bar to even render I lost a lot of time -->
         <script>
-        // var L = window.L;
-        // var map = L.map('map').setView([38,-100],5);
-        // L.L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',{
-        //     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' 
-        // }).addTo(map);
-
-        // const searchLayer = L.geoJson(otherLayers,{
-        //     onEachFeature: function(feature, layer){
-        //         layer.bindPopup(feature.properties.State);
-        //     }
-        // }).addTo(map);
-
-        // // Control Search
-        // const searchControl = new L.Control.Search({
-        //     layer: searchLayer,
-        //     propertyName: 'STate'
-        // });
-        // map.addControl(searchControl);
         </script>
 
         <!--put your initial page content here-->
         <div id="map"></div>
         <div id="slidecontainer"></div>
-        <div id="forward"></div>
-        <div id="reverse"></div>
-        <div id="legend"></div>
-        <!-- for fifth operator -->
-        <div id="searchbar"></div>
        <!--  -->
         <footer class="footer"></footer>
         <figure>
@@ -74,15 +30,10 @@
         </div>
     </footer>
 <!---->
-        <!--Leaflet JavaScript-->
-        <script type="text/javascript" src="lib/leaflet-src.js"></script>
-
+       
         <!-- LAB 1 -->
         <!-- please look at both -->
-
-        <!--link to script with condensed script; working PROPORTIONAL SYMBOLS, slider in map -->
-        <!-- DISPLAYING JS WITH WORKING POINT SYMBOLS even though I know the assignment is looking for the main.js that has all the code of this script
-        but no working legend :( -->
+        <script type="text/javascript" src="lib/3.min.js"></script>
         <script type="text/javascript" src="js/active_OilStates lab1 lesson2 copy works.js"></script>
 
         <!--link to script with working slider in map, attribute legend displays with min mean and max, but proportional symbols do not display.js -->
