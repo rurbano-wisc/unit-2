@@ -3,7 +3,9 @@
 var map;
 var minValue;
 var dataStats = {};
-// var controlLayers = L.control.layers();
+var controlLayers = L.control.layers();
+
+var refineryLayerGlobal = L.geoJSON();
 //pretty black basemap with green overtones of landcover
 var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
 	maxZoom: 20,
@@ -24,6 +26,8 @@ function createMap(){
     Stadia_AlidadeSmoothDark.addTo(map);
 //function to attach popups to each mapped feature; call getData function
     getData();
+    getRefineryData();
+    controlLayers.addTo(map);
 };
 
 //array that is very important to like everything and needs to be piped in lots of places so don't forget >>>>>>>   NumWells_    <<<<<<<<<<<
@@ -40,22 +44,34 @@ function calcStats(data){
               allValues.push(value);
         }
     }
+    
+    allValues = allValues.filter(function(value){
+        return value > 1;
+    });
     //get min, max, mean stats for our array
     dataStats.min = Math.min(...allValues);
     dataStats.max = Math.max(...allValues);
     //calculate meanValue
     var sum = allValues.reduce(function(a, b){return a+b;});
     dataStats.mean = sum/ allValues.length;
+    console.log(dataStats);
+   
+
     //get minimum value of array--no longer need filter cleaned the data up :( do I need this though?
-    var minValue = Math.min(...allValues)
-    return minValue
+    // var greaterThan1_allValues = allValues.filter(function(value){
+    //     return value > 1;
+    // });
+
+    // var minValue = Math.min(...greaterThan1_allValues)
+    // return minValue;
+
 } //need semicolon??
 //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //constant factor adjusts symbol sizes evenly
     var minRadius = .40;
     //Flannery Apperance Compensation formula :| meh
-    var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
+    var radius = 1.0083 * Math.pow(attValue/dataStats.min,0.5715) * minRadius;
     return radius;
 };
 //POINT TO LAYER
@@ -95,14 +111,7 @@ function createPropSymbols(data, attributes){
         }
     }).addTo(map);
 };
-//calculate the radius of each proportional symbol
-function calcPropRadius(attValue) {
-    //constant factor adjusts symbol sizes evenly
-    var minRadius = .40;
-    //Flannery Apperance Compensation formula :| meh
-    var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
-    return radius;
-};
+
 //PopupContent Constructor
 function PopupContent(properties, attribute){
     this.properties = properties;
@@ -197,6 +206,60 @@ function processData(data){
     // console.log(attributes);
     return attributes;
 };
+
+function getCircleValues(attribute) {
+    //start with min at highest possible and max at lowest possible number
+    var min = Infinity,
+        max = -Infinity;
+
+    map.eachLayer(function (layer) {
+        //get the attribute value
+        if (layer.feature) {
+        var attributeValue = Number(layer.feature.properties[attribute]);
+
+        //test for min
+        if (attributeValue < min) {
+            min = attributeValue;
+        }
+
+        //test for max
+        if (attributeValue > max) {
+            max = attributeValue;
+        }
+        }
+    });
+
+    //set mean
+    var mean = (max + min) / 2;
+
+    //return values as an object
+    return {
+        max: max,
+        mean: mean,
+        min: min,
+    };
+}
+
+function updateLegend(attribute) {
+//create content for legend
+var year = attribute.split("_")[1];
+//replace legend content
+document.querySelector("span.year").innerHTML = year;
+
+//get the max, mean, and min values as an object
+var circleValues = getCircleValues(attribute);
+
+    for (var key in circleValues) {
+        //get the radius
+        var radius = calcPropRadius(circleValues[key]);
+
+        document.querySelector("#" + key).setAttribute("cy", 130 - radius);
+        document.querySelector("#" + key).setAttribute("r", radius)
+
+        document.querySelector("#" + key + "-text").textContent = Math.round(circleValues[key] * 100) / 100 + " million";
+    }
+}
+
 //Resize proportional symbols according to new attribute values
 function updatePropSymbols(attribute){
     var year = attribute.split("_")[1];
@@ -217,6 +280,8 @@ function updatePropSymbols(attribute){
             //should I have added more here to get the popups to work with the required attribute legend     
         };
     });
+
+    updateLegend(attribute);
 };
 //function to retrieve the data and place it on the map
 function getData(map){
@@ -231,7 +296,29 @@ function getData(map){
             calcStats(json);
             createPropSymbols(json, attributes);
             createSequenceControls(attributes);
-            createLegend(attributes[0]); 
+            createLegend(attributes); 
+        })
+};
+
+function getRefineryData(map){
+
+    var refineryStyle = {
+        fillColor: "#A65E44",
+        color: "#fff",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.2
+    };
+
+    //load the data
+    fetch("data/petroleumRefineries.geojson")
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){
+            console.log(json);
+            refineryLayer = L.geoJSON(json, refineryStyle);
+            controlLayers.addOverlay(refineryLayer, 'Petroleum Refineries'); 
         })
 };
 
@@ -253,14 +340,12 @@ function createLegend(attributes){
             // create the control container with a particular class name
             var container = L.DomUtil.create('div', 'legend-control-container');
 
-            var year = attributes.split("_")[1];
+            //var year = attributes.split("_")[1];
 
             container.innerHTML = '<p class="temporalLegend">Number of oil wells in <span class="year">1980</span></p>';
             
             //Step 1: start attribute legend svg string
             var svg = '<svg id="attribute-legend" width="200px" height="100px">';
-            //add attribute legend svg to container--needed anymore??
-            container.innerHTML += svg;
             
             //array of circle names to base loop on
             var circles = ["max", "mean", "min"];
