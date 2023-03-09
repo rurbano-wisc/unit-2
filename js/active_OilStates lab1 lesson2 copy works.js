@@ -3,16 +3,6 @@
 var map;
 var minValue;
 // var controlLayers = L.control.layers();
-//pretty black basemap with green overtones of landcover
-var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-	maxZoom: 20,
-	attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-});
-// set up to allow the potential for additional basemaps--abandoned
-    var basemaps = {
-        "Stadia Basemap": Stadia_AlidadeSmoothDark,
-        // "Basic OpenStreetMaps": basicOSM
-    };
 //function to instantiate the Leaflet map; Create the Leaflet map
 function createMap(){
     //create the map
@@ -20,7 +10,10 @@ function createMap(){
         center: [35.5, -100],
         zoom: 5
     });
-    Stadia_AlidadeSmoothDark.addTo(map);
+    //add OSM base tilelayer
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+    }).addTo(map);
 //function to attach popups to each mapped feature; call getData function
     getData();
 };
