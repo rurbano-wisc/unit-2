@@ -21,7 +21,7 @@ function createMap(){
     //create the map
     map = L.map('map', {
         center: [35.5, -100],
-        zoom: 5
+        zoom: 5,
     });
     Stadia_AlidadeSmoothDark.addTo(map);
 //function to attach popups to each mapped feature; call getData function
@@ -44,7 +44,6 @@ function calcStats(data){
               allValues.push(value);
         }
     }
-    
     allValues = allValues.filter(function(value){
         return value > 1;
     });
@@ -56,16 +55,7 @@ function calcStats(data){
     dataStats.mean = sum/ allValues.length;
     console.log(dataStats);
    
-
-    //get minimum value of array--no longer need filter cleaned the data up :( do I need this though?
-    // var greaterThan1_allValues = allValues.filter(function(value){
-    //     return value > 1;
-    // });
-
-    // var minValue = Math.min(...greaterThan1_allValues)
-    // return minValue;
-
-} //need semicolon??
+} //does not need semicolon
 //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //constant factor adjusts symbol sizes evenly
@@ -102,7 +92,6 @@ function pointToLayer(feature, latlng, attributes){
      return layer;
 };   
 //Add circle markers for point features to the map
-//Example 2.1 line 34...Add circle markers for point features to the map
 function createPropSymbols(data, attributes){
     //create a Leaflet GeoJSON layer and add it to the map
     L.geoJson(data, {
@@ -256,7 +245,7 @@ var circleValues = getCircleValues(attribute);
         document.querySelector("#" + key).setAttribute("cy", 130 - radius);
         document.querySelector("#" + key).setAttribute("r", radius)
 
-        document.querySelector("#" + key + "-text").textContent = Math.round(circleValues[key] * 100) / 100 + " million";
+        document.querySelector("#" + key + "-text").textContent = Math.round(circleValues[key] * 100) / 100 + " wells";
     }
 }
 
@@ -299,6 +288,18 @@ function getData(map){
             createLegend(attributes); 
         })
 };
+// function createCustomIcon (feature, latlng) {
+//     let myIcon = L.icon({
+//       iconUrl: 'img/oilrig.jpg',
+//       shadowUrl: 'img/oilrig.jpg',
+//       iconSize:     [25, 25], // width and height of the image in pixels
+//       shadowSize:   [35, 20], // width, height of optional shadow image
+//       iconAnchor:   [12, 12], // point of the icon which will correspond to marker's location
+//       shadowAnchor: [12, 6],  // anchor point of the shadow. should be offset
+//       popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+//     })
+//     return L.marker(latlng, { icon: myIcon })
+//   }
 
 function getRefineryData(map){
 
@@ -322,15 +323,7 @@ function getRefineryData(map){
         })
 };
 
-
-// also does not work for adding a layer
-// var geojson = new L.GeoJSON.AJAX("data\petroleumRefineries.geojson",{style:StratStyle});
-// geojson.on('data:loaded', function(){
-// geojson.addTo(mymap);
-// });
-
-
-//create legend goes here?
+//create legend goes here
 function createLegend(attributes){
     var LegendControl = L.Control.extend({
         options: {
@@ -345,7 +338,8 @@ function createLegend(attributes){
             container.innerHTML = '<p class="temporalLegend">Number of oil wells in <span class="year">1980</span></p>';
             
             //Step 1: start attribute legend svg string
-            var svg = '<svg id="attribute-legend" width="200px" height="100px">';
+            //viewBox="-30 -50 250 100" toggled circle moving this around
+            var svg = '<svg id="attribute-legend" width="190px" height="200px" viewBox="-30 -40 250 100">';
             
             //array of circle names to base loop on
             var circles = ["max", "mean", "min"];
@@ -354,10 +348,10 @@ function createLegend(attributes){
             for (var i=0; i<circles.length; i++){
                 //Step 3: assign the r and cy attributes  
                 var radius = calcPropRadius(dataStats[circles[i]]);  
-                var cy = 130 - radius; 
+                var cy = 100 - radius; 
                 
                 //circle string
-                svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + '"cy="' + cy + '" fill="yellow" fill-opacity="0.8" stroke="#000000" cx="65"/>';
+                svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + '"cy=-100"' + cy + '" fill="yellow" fill-opacity="0.4" stroke="#000000" cx="100"/>';
                 //evenly space out labels            
                 var textY = i * 20 + 20;
                  //text string            
@@ -378,10 +372,3 @@ function createLegend(attributes){
         map.addControl(new LegendControl());
 };
 document.addEventListener('DOMContentLoaded',createMap);
-
-// <!-- svg thing -->
-// <!-- <svg id="Layer_1" width="180px" height="180px">
-//     <circle fill="yellow" fill-opacity="0.8" stroke="#000000" stroke-miterlimit="10" cx="90" cy="90.001" r="89.5"/>
-// </svg>  -->
-// <!-- outer html of svg 
-// <circle fill="yellow" fill-opacity="0.8" stroke="#000000" stroke-miterlimit="10" cx="90" cy="90.001" r="89.5"></circle> -->

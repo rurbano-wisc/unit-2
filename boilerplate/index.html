@@ -2,87 +2,61 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Top producing Oil States 1980-2015</title>     
+        <!-- title of tab in browser -->
+        <title>Top producing Oil States 1980-2015</title>  
+
+         <!--links & stuff  -->
         <!--leaflet css file-->
         <link rel="stylesheet" href="lib/leaflet.css">
-
-        <!-- also for fifth operator -->
         <!-- <script src = "js/leaflet-search.src.js" ></script> -->
         <link rel="stylesheet" href="css/leaflet-search.src.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
    integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
    crossorigin=""/>
-        <!-- <script src = "lib\leaflet.js.maps.js" ></script> -->
-
-        <!-- not for fifth operator -->
+        <!-- style css -->
         <link rel="stylesheet" href="css/style.css">
-    
-        <!-- fifth operator leaflet search; was testing with refineries layer, would have liked to add the pipelines -->
-        <!-- <script src = "js/otherLayers.js" ></script> -->
-    
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.5.1/nouislider.min.js"></script> -->
+         
+<!--  -->        
     </head>
 <!--  -->
     <body>
-        <h1>Expansion in Oil Activity <small> <i>1980-2015 shown below</i> for select states.</small></h1> 
-            <h2>
-                <blockquote>
-                    <p><b>Oil well </b><small>- a hole drilled in the earth for the purpose of finding or producing crude oil or natural gas or future gas exploration.</small></p>
-                </blockquote>
-            </h2>
-        <!-- json data for fifth operator, abandoned I would have liked to display the records that were only for the selected state. Not being able to get the search bar to even render I lost a lot of time -->
-        <script>
-        // var L = window.L;
-        // var map = L.map('map').setView([38,-100],5);
-        // L.L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',{
-        //     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' 
-        // }).addTo(map);
-
-        // const searchLayer = L.geoJson(otherLayers,{
-        //     onEachFeature: function(feature, layer){
-        //         layer.bindPopup(feature.properties.State);
-        //     }
-        // }).addTo(map);
-
-        // // Control Search
-        // const searchControl = new L.Control.Search({
-        //     layer: searchLayer,
-        //     propertyName: 'STate'
-        // });
-        // map.addControl(searchControl);
-        </script>
-
+        <header> Expansion in Oil Activity <br></header>
+        <h1><i><b>Oil well </b><small>- a hole drilled in the earth for the purpose of finding or producing crude oil or natural gas or future gas exploration.</i>
+        </blockquote></h1> 
+        <h2>    The year 1980 was chosen as a starting point because it is around when the deregulation of oil prices began, arguably one of the best times where alternative energy sources could have been invested in. 
+            With the second best time being now. As a result, years 1980-2015 shown below summarized by number of active oil wells for per state.</h2>
         <!--put your initial page content here-->
         <div id="map"></div>
         <div id="slidecontainer"></div>
         <div id="forward"></div>
         <div id="reverse"></div>
         <div id="legend"></div>
-        <!-- for fifth operator -->
-        <div id="searchbar"></div>
        <!--  -->
-        <footer class="footer"></footer>
-        <figure>
-            <figcaption>Data Source: <small>Utilizing an Oil and Gas Well </small><cite><a href="https://www.arcgis.com/apps/mapviewer/index.html?url=https://services1.arcgis.com/Hp6G80Pky0om7QvQ/ArcGIS/rest/services/Oil_and_Natural_Gas_Wells/FeatureServer&source=sd"><small>feature layer</small></a></cite><small> created by a handful of National Laboratories & Homeland Security made publicly available for exploring Oil & Gas activity in the United States and portions of Canada.</small></figcaption>
-        </figure>
-        </div>
-    </footer>
+
+       <div class="row">
+        <div class="column" style="background-color:lightblue;"><b>According to the Energy Information Administration (EIA) the following states do not have active/producing Oil or Natural Gas Wells:</b><br>
+            <br>Connecticut, Delaware, District of Columbia, Georgia, Hawaii, Iowa, Idaho, Massachusetts, Maine, Minnesota, North Carolina, 
+            New Hampshire, New Jersey, Rhode Island, South Carolina, Vermont, and Wisconsin.<br>
+            <br>This does not mean complete absence of any oil infrastructure for these states, all states have oil pipelines traversing through the countrysides and into the urban networks.</div>
+        <div class="column1" style="background-color:lightgrey;"><b>Not featured here are an additional twelve states that have active oil production established prior to 1980.</b><br><br>  
+            The three states that have not created additional oil wells are: <br>
+            Alabama, Colorado, and Illinois.<br><br>States that have recently come online for oil extraction are: Michigan, Montana, Nevada, North Dakota, Oregon, Pennsylvania, South Dakota, Tennessee, and Washington. 
+            <br><br>Toggle the refineries layer to see where oil is being sent to from oil producing states.<br></div>
+        <div class="column2" style="background-color:lightblue;">Studies have reported associations between residential proximity to oil and gas operations 
+            increasingly contributes to air pollution, water contamination, noise, psychosocial stress, and health risks.<br><br>
+            Sulfur dioxide and benzene are two of the most common pollutants that effects the human body through breathing in contaminated air. Any person living near an oil refinery is susceptible to this type of exposure.
+            <br><br> Even in areas where there has been discontinued oil infrastructure, these pose unseen issues often times.</div>
+      </div>   
+        <footer class="footer"><p>Source: An Oil & Gas Well feature layer made publicly available for exploring Oil & Gas activity in the United States and portions of Canada, created by a handful of National Laboratories & Homeland Security. It can be found <cite><a href="https://www.arcgis.com/apps/mapviewer/index.html?url=https://services1.arcgis.com/Hp6G80Pky0om7QvQ/ArcGIS/rest/services/Oil_and_Natural_Gas_Wells/FeatureServer&source=sd">here</a></cite>.</p>
+
 <!---->
         <!--Leaflet JavaScript-->
         <script type="text/javascript" src="lib/leaflet-src.js"></script>
 
-        <!-- LAB 1 -->
-        <!-- please look at both -->
-
-        <!--link to script with condensed script; working PROPORTIONAL SYMBOLS, slider in map -->
-        <!-- DISPLAYING JS WITH WORKING POINT SYMBOLS even though I know the assignment is looking for the main.js that has all the code of this script
-        but no working legend :( -->
+        <!-- main.js -->
         <script type="text/javascript" src="js/main.js"></script>
 
-        <!--link to script with working slider in map, attribute legend displays with min mean and max, but proportional symbols do not display.js -->
-        <!-- <script type="text/javascript" src="js/main.js"></script>       -->
     </body>
 </html>
