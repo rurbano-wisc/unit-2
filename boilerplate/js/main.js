@@ -4,7 +4,7 @@ var map;
 var minValue;
 var dataStats = {};
 var controlLayers = L.control.layers();
-
+// var pipelineLayerGlobal = L.geoJSON();
 var refineryLayerGlobal = L.geoJSON();
 //pretty black basemap with green overtones of landcover
 var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
@@ -21,12 +21,13 @@ function createMap(){
     //create the map
     map = L.map('map', {
         center: [35.5, -100],
-        zoom: 5,
+        zoom: 5
     });
     Stadia_AlidadeSmoothDark.addTo(map);
 //function to attach popups to each mapped feature; call getData function
     getData();
     getRefineryData();
+    // getPipelineData();
     controlLayers.addTo(map);
 };
 
@@ -66,7 +67,7 @@ function calcPropRadius(attValue) {
 };
 //POINT TO LAYER
 function pointToLayer(feature, latlng, attributes){
-    //Step 4. Determine the attribute for scaling the proportional symbols
+    //Determine the attribute for scaling the proportional symbols
     var attribute = attributes[0];
     //create marker oilWellOptions
     var oilWellOptions = {
@@ -288,28 +289,29 @@ function getData(map){
             createLegend(attributes); 
         })
 };
-// function createCustomIcon (feature, latlng) {
-//     let myIcon = L.icon({
-//       iconUrl: 'img/oilrig.jpg',
-//       shadowUrl: 'img/oilrig.jpg',
-//       iconSize:     [25, 25], // width and height of the image in pixels
-//       shadowSize:   [35, 20], // width, height of optional shadow image
-//       iconAnchor:   [12, 12], // point of the icon which will correspond to marker's location
-//       shadowAnchor: [12, 6],  // anchor point of the shadow. should be offset
-//       popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-//     })
-//     return L.marker(latlng, { icon: myIcon })
-//   }
 
 function getRefineryData(map){
 
+    // var refineryStyleIcon = L.icon({
+    //     iconUrl: 'oilpumpjack.png',
+    //     iconSize: [32,37],
+    //     iconAnchor: [33,-118],
+    //     popupAnchor : [33,-118]
+    // });
+    // L.marker(33,-118), {icon:refineryStyleIcon}.addTo(map).bindPopup('Map Author Location!');
+   
     var refineryStyle = {
-        fillColor: "#A65E44",
+        fillColor: "green",
         color: "#fff",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.2
     };
+
+    // const refineryStyleIcon = L.icon({
+    //     iconUrl: "oilpumpjack.png",
+    //     iconSize: [32, 37]
+    //   });
 
     //load the data
     fetch("data/petroleumRefineries.geojson")
@@ -319,9 +321,35 @@ function getRefineryData(map){
         .then(function(json){
             console.log(json);
             refineryLayer = L.geoJSON(json, refineryStyle);
+
+            // refineryLayer = L.marker({icon: refineryStyleIcon}).addTo(map);
+            // refineryLayer = L.icon(json, refineryStyleIcon);
             controlLayers.addOverlay(refineryLayer, 'Petroleum Refineries'); 
         })
 };
+
+// function getPipelineData(map){
+
+//     var pipelineStyle = {
+//         fillColor: "green",
+//         color: "#fff",
+//         weight: 1,
+//         opacity: 1,
+//         fillOpacity: 0.2
+//     };
+
+//     //load the data
+//     fetch("data/gasLines.geojson")
+//         .then(function(response){
+//             return response.json();
+//         })
+//         .then(function(json){
+//             console.log(json);
+//             pipelineLayer = L.geoJSON(json, pipelineStyle);
+//             controlLayers.addOverlay(pipelineLayer, 'Gas Pipelines'); 
+//         })
+// };
+
 
 //create legend goes here
 function createLegend(attributes){
@@ -372,3 +400,15 @@ function createLegend(attributes){
         map.addControl(new LegendControl());
 };
 document.addEventListener('DOMContentLoaded',createMap);
+
+//alt layer display
+// let url = 
+//     "https://earthquake.usgs.gov/earthquakes/feed/v1.0/" + 
+//     "summary/4.5_week.geojson";
+// fetch(url)
+//     .then(function(response) {
+//         return response.json();
+//     })
+//     .then(function(data) {
+//         L.geoJSON(data).addTo(map);
+//     });
